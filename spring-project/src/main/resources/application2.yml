@@ -1,0 +1,6 @@
+server:
+  address: 127.0.0.1
+  compression:
+    enabled: true
+    mime-types: xyz
+  port: 9090
