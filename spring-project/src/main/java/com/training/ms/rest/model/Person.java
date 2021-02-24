@@ -2,6 +2,15 @@ package com.training.ms.rest.model;
 
 import java.time.LocalDate;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -13,7 +22,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.training.ms.validation.StartWith;
 
 @XmlRootElement
+@Entity
+@Table(name = "kisi")
 public class Person {
+
+    @Id
+    @GeneratedValue
+    private Long      personId;
 
     @NotEmpty
     @Size(min = 2, max = 20, message = "name 2 ile 20 arasında olmalı")
@@ -25,11 +40,15 @@ public class Person {
     @NotNull
     @Past
     private LocalDate birthdate;
+    @Enumerated(EnumType.STRING)
     private EGender   gender;
     @Max(300)
     @Min(10)
     private Integer   weight;
     private Integer   length;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private PersonExt personExt;
 
     public String getName() {
         return this.name;
@@ -95,6 +114,22 @@ public class Person {
                + ", length="
                + this.length
                + "]";
+    }
+
+    public Long getPersonId() {
+        return this.personId;
+    }
+
+    public void setPersonId(final Long personIdParam) {
+        this.personId = personIdParam;
+    }
+
+    public PersonExt getPersonExt() {
+        return this.personExt;
+    }
+
+    public void setPersonExt(final PersonExt personExtParam) {
+        this.personExt = personExtParam;
     }
 
 

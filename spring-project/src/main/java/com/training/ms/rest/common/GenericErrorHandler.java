@@ -2,6 +2,8 @@ package com.training.ms.rest.common;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
@@ -14,6 +16,10 @@ import com.training.ms.error.ErrorObject;
 
 @RestControllerAdvice
 public class GenericErrorHandler {
+
+
+    private static final Logger logger = LoggerFactory.getLogger(GenericErrorHandler.class);
+
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -44,6 +50,8 @@ public class GenericErrorHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorObject> handleException(final Exception exp) {
+        GenericErrorHandler.logger.error("[GenericErrorHandler][handleException]-> *Error* : " + exp.getMessage(),
+                                         exp);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                              .body(new ErrorObject(exp.getMessage(),
                                                    300));
