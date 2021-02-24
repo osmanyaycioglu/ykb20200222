@@ -1,0 +1,17 @@
+
+
+Customer Spring projesi
+	Customer
+		name
+		surname
+		age
+		...
+	CustomerController
+		4 işlem provision
+		Error Handling
+		Validation  
+	CustomerManager
+		Map kullanma yada JPA DB ekleme
+			* JPA ICustomerDao
+			
+	
