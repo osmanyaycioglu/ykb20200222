@@ -2,6 +2,7 @@ package com.training.micro.services;
 
 import java.util.List;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -11,6 +12,7 @@ import com.netflix.discovery.EurekaClient;
 import com.netflix.discovery.shared.Application;
 import com.training.micro.clients.IAccountingClient;
 import com.training.micro.clients.error.RestException;
+import com.training.micro.models.NotifyRequest;
 import com.training.micro.models.Order;
 import com.training.micro.models.PaymentRequest;
 
@@ -19,6 +21,9 @@ public class PaymentService {
 
     @Autowired
     private RestTemplate      rt;
+
+    @Autowired
+    private RabbitTemplate    rabbit;
 
     @Autowired
     private EurekaClient      eurekaClient;
@@ -45,6 +50,15 @@ public class PaymentService {
         requestLoc.setCustomerId(order.getCustomerId());
         requestLoc.setCustomerName(order.getCustomerName());
         String retValLoc = this.accountingClient.pay(requestLoc);
+
+        NotifyRequest notifyRequestLoc = new NotifyRequest();
+        notifyRequestLoc.setDest("37862386");
+        notifyRequestLoc.setMessage("Siparişini alındı sayın : " + order.getCustomerName());
+
+        this.rabbit.convertAndSend("sms-notify-ex",
+                                   "sms-notify",
+                                   notifyRequestLoc);
+
         System.out.println(retValLoc);
         return retValLoc;
     }
