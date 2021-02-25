@@ -1,0 +1,6 @@
+
+
+Customer Projesini MS e çevir
+Başka MS yaz ve Customer MS çağır
+Feign kullan 
+* Error Handling ve Validation
